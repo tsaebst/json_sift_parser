@@ -1,0 +1,24 @@
+[package]
+name = "json_sift_parser"
+version = "0.1.0"
+edition = "2024"
+description = "JSON-Sift is my first parser. It processes aviation weather data (METAR) used in civil flights, decoding abbreviations and transforming raw API data into structured CSV format for easier analysis."
+license = "MIT" 
+authors = ["Vladyslava Spitkovska. <spitkovskavlada@gmail.com>"]
+
+keywords = ["json", "parser", "csv", "weather", "metar"]
+categories = ["data-format", "parser", "command-line-utilities"]
+
+[dependencies]
+pest = "2.7"
+pest_derive = "2.7"
+clap = { version = "4.0", features = ["derive"] }
+thiserror = "1.0"
+anyhow = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+csv = "1.2"
+regex = "1.12"
+
+[dev-dependencies]
+pretty_assertions = "1.4"

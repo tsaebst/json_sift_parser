@@ -1,0 +1,329 @@
+[
+  {
+    "icaoId": "KLAX",
+    "test": "Test, 666",
+    "receiptTime": "2025-11-04T21:01:00.000Z",
+    "obsTime": 1762289700,
+    "reportTime": "2025-11-04T21:00:00.000Z",
+    "temp": 18.2,
+    "dewp": 12.5,
+    "wdir": 260,
+    "wspd": 10,
+    "wgst": 14,
+    "visib": "10+",
+    "altim": 1011.2,
+    "slp": 1010.6,
+    "qcField": 10,
+    "presTend": -0.8,
+    "metarType": "METAR",
+    "rawOb": "TEST METAR KLAX 042053Z 26010G14KT 10SM SCT040 18/12 A2985 RMK AO2",
+    "lat": 33.9425,
+    "lon": -118.4081,
+    "elev": 38,
+    "name": "Los Angeles Intl, CA, US",
+    "cover": "SCT",
+    "clouds": [
+      {
+        "cover": "SCT",
+        "base": 4000
+      }
+    ],
+    "fltCat": "VFR"
+  },
+  {
+    "icaoId": "KORD",
+    "receiptTime": "2025-11-04T21:02:00.000Z",
+    "obsTime": 1762289760,
+    "reportTime": "2025-11-04T21:00:00.000Z",
+    "temp": 15.0,
+    "dewp": 10.2,
+    "wdir": 190,
+    "wspd": 12,
+    "wgst": 19,
+    "visib": "9",
+    "altim": 1014.6,
+    "slp": 1013.8,
+    "qcField": 8,
+    "presTend": -1.2,
+    "metarType": "METAR",
+    "rawOb": "METAR KORD 042053Z 19012G19KT 9SM BKN070 15/10 A2995 RMK AO2",
+    "lat": 41.9786,
+    "lon": -87.9048,
+    "elev": 204,
+    "name": "Chicago O'Hare Intl, IL, US",
+    "cover": "BKN",
+    "clouds": [
+      {
+        "cover": "BKN",
+        "base": 7000
+      }
+    ],
+    "fltCat": "MVFR"
+  },
+  {
+    "icaoId": "KDEN",
+    "receiptTime": "2025-11-04T21:03:00.000Z",
+    "obsTime": 1762289820,
+    "reportTime": "2025-11-04T21:00:00.000Z",
+    "temp": 10.6,
+    "dewp": 2.0,
+    "wdir": 300,
+    "wspd": 20,
+    "wgst": 30,
+    "visib": "8",
+    "altim": 1020.0,
+    "slp": 1019.3,
+    "qcField": 9,
+    "presTend": -0.5,
+    "metarType": "METAR",
+    "rawOb": "METAR KDEN 042053Z 30020G30KT 8SM OVC090 10/02 A3012 RMK AO2",
+    "lat": 39.8617,
+    "lon": -104.6731,
+    "elev": 1655,
+    "name": "Denver Intl, CO, US",
+    "cover": "OVC",
+    "clouds": [
+      {
+        "cover": "OVC",
+        "base": 9000
+      }
+    ],
+    "fltCat": "VFR"
+  },
+  {
+    "icaoId": "KSFO",
+    "receiptTime": "2025-11-04T21:04:00.000Z",
+    "obsTime": 1762289880,
+    "reportTime": "2025-11-04T21:00:00.000Z",
+    "temp": 16.1,
+    "dewp": 11.3,
+    "wdir": 280,
+    "wspd": 18,
+    "wgst": 25,
+    "visib": "10+",
+    "altim": 1013.0,
+    "slp": 1012.4,
+    "qcField": 7,
+    "presTend": 0.3,
+    "metarType": "METAR",
+    "rawOb": "METAR KSFO 042053Z 28018G25KT 10SM SCT060 16/11 A2992 RMK AO2",
+    "lat": 37.6213,
+    "lon": -122.3790,
+    "elev": 4,
+    "name": "San Francisco Intl, CA, US",
+    "cover": "SCT",
+    "clouds": [
+      {
+        "cover": "SCT",
+        "base": 6000
+      }
+    ],
+    "fltCat": "VFR"
+  },
+  {
+    "icaoId": "KATL",
+    "receiptTime": "2025-11-04T21:05:00.000Z",
+    "obsTime": 1762289940,
+    "reportTime": "2025-11-04T21:00:00.000Z",
+    "temp": 25.2,
+    "dewp": 15.8,
+    "wdir": 180,
+    "wspd": 14,
+    "wgst": 18,
+    "visib": "10+",
+    "altim": 1010.5,
+    "slp": 1009.8,
+    "qcField": 11,
+    "presTend": 0.0,
+    "metarType": "METAR",
+    "rawOb": "METAR KATL 042053Z 18014G18KT 10SM FEW050 25/16 A2983 RMK AO2",
+    "lat": 33.6367,
+    "lon": -84.4281,
+    "elev": 313,
+    "name": "Atlanta Hartsfield-Jackson Intl, GA, US",
+    "cover": "FEW",
+    "clouds": [
+      {
+        "cover": "FEW",
+        "base": 5000
+      }
+    ],
+    "fltCat": "VFR"
+  },
+  {
+    "icaoId": "KSEA",
+    "receiptTime": "2025-11-04T21:06:00.000Z",
+    "obsTime": 1762290000,
+    "reportTime": "2025-11-04T21:00:00.000Z",
+    "temp": 11.9,
+    "dewp": 9.4,
+    "wdir": 230,
+    "wspd": 9,
+    "wgst": 15,
+    "visib": "7",
+    "altim": 1016.1,
+    "slp": 1015.3,
+    "qcField": 6,
+    "presTend": -0.2,
+    "metarType": "METAR",
+    "rawOb": "METAR KSEA 042053Z 23009G15KT 7SM BKN120 12/09 A3000 RMK AO2",
+    "lat": 47.4502,
+    "lon": -122.3088,
+    "elev": 130,
+    "name": "Seattle-Tacoma Intl, WA, US",
+    "cover": "BKN",
+    "clouds": [
+      {
+        "cover": "BKN",
+        "base": 12000
+      }
+    ],
+    "fltCat": "VFR"
+  },
+  {
+    "icaoId": "KBOS",
+    "receiptTime": "2025-11-04T21:07:00.000Z",
+    "obsTime": 1762290060,
+    "reportTime": "2025-11-04T21:00:00.000Z",
+    "temp": 17.3,
+    "dewp": 10.9,
+    "wdir": 200,
+    "wspd": 11,
+    "wgst": 17,
+    "visib": "10+",
+    "altim": 1012.9,
+    "slp": 1012.0,
+    "qcField": 5,
+    "presTend": -0.4,
+    "metarType": "METAR",
+    "rawOb": "METAR KBOS 042053Z 20011G17KT 10SM SCT080 17/11 A2991 RMK AO2",
+    "lat": 42.3656,
+    "lon": -71.0096,
+    "elev": 6,
+    "name": "Boston Logan Intl, MA, US",
+    "cover": "SCT",
+    "clouds": [
+      {
+        "cover": "SCT",
+        "base": 8000
+      }
+    ],
+    "fltCat": "VFR"
+  },
+  {
+    "icaoId": "KPHX",
+    "receiptTime": "2025-11-04T21:08:00.000Z",
+    "obsTime": 1762290120,
+    "reportTime": "2025-11-04T21:00:00.000Z",
+    "temp": 29.7,
+    "dewp": 5.4,
+    "wdir": 240,
+    "wspd": 8,
+    "wgst": 12,
+    "visib": "10+",
+    "altim": 1008.7,
+    "slp": 1007.9,
+    "qcField": 7,
+    "presTend": 0.6,
+    "metarType": "METAR",
+    "rawOb": "METAR KPHX 042053Z 24008G12KT 10SM CLR 30/05 A2978 RMK AO2",
+    "lat": 33.4373,
+    "lon": -112.0078,
+    "elev": 346,
+    "name": "Phoenix Sky Harbor Intl, AZ, US",
+    "cover": "CLR",
+    "clouds": [],
+    "fltCat": "VFR"
+  },
+  {
+    "icaoId": "KJFK",
+    "receiptTime": "2025-11-04T21:09:00.000Z",
+    "obsTime": 1762290180,
+    "reportTime": "2025-11-04T21:00:00.000Z",
+    "temp": 20.4,
+    "dewp": 12.2,
+    "wdir": 210,
+    "wspd": 13,
+    "wgst": 20,
+    "visib": "10+",
+    "altim": 1011.4,
+    "slp": 1010.5,
+    "qcField": 10,
+    "presTend": -0.1,
+    "metarType": "METAR",
+    "rawOb": "METAR KJFK 042053Z 21013G20KT 10SM BKN090 20/12 A2986 RMK AO2",
+    "lat": 40.6413,
+    "lon": -73.7781,
+    "elev": 4,
+    "name": "John F. Kennedy Intl, NY, US",
+    "cover": "BKN",
+    "clouds": [
+      {
+        "cover": "BKN",
+        "base": 9000
+      }
+    ],
+    "fltCat": "VFR"
+  },
+  {
+    "icaoId": "KMIA",
+    "receiptTime": "2025-11-04T21:10:00.000Z",
+    "obsTime": 1762290240,
+    "reportTime": "2025-11-04T21:00:00.000Z",
+    "temp": 27.5,
+    "dewp": 21.3,
+    "wdir": 160,
+    "wspd": 15,
+    "wgst": 22,
+    "visib": "10+",
+    "altim": 1010.2,
+    "slp": 1009.5,
+    "qcField": 12,
+    "presTend": 0.1,
+    "metarType": "METAR",
+    "rawOb": "METAR KMIA 042053Z 16015G22KT 10SM FEW040 28/21 A2982 RMK AO2",
+    "lat": 25.7959,
+    "lon": -80.2870,
+    "elev": 2,
+    "name": "Miami Intl, FL, US",
+    "cover": "FEW",
+    "clouds": [
+      {
+        "cover": "FEW",
+        "base": 4000
+      }
+    ],
+    "fltCat": "VFR"
+  },
+  {
+  "icaoId": "KLAX",
+  "receiptTime": "2025-11-04T21:01:00.000Z",
+  "obsTime": 1762289700,
+  "reportTime": "2025-11-04T21:00:00.000Z",
+  "temp": 18.2,
+  "dewp": 12.5,
+  "wdir": 260,
+  "wspd": 10,
+  "wgst": 14,
+  "visib": "10+",
+  "altim": 1011.2,
+  "slp": 1010.6,
+  "qcField": 10,
+  "presTend": -0.8,
+  "metarType": "METAR",
+  "rawOb": "TEST METAR KLAX 042053Z 26010G14KT 10SM SCT040 18/12 A2985 WS12*NT07 RMK AO2",
+  "lat": 33.9425,
+  "lon": -118.4081,
+  "elev": 38,
+  "name": "Los Angeles Intl, CA, US",
+  "cover": "SCT",
+  "clouds": [
+    {
+      "cover": "SCT",
+      "base": 4000
+    }
+  ],
+  "fltCat": "VFR"
+}
+
+]

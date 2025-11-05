@@ -1,0 +1,59 @@
+
+// basic tokens 
+WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
+ASCII_UPPER_ALPHA = _{ 'A'..'Z' }
+
+// basic rule == rand number of recognized or unrecognized tokens
+metar_report = { SOI ~ token* ~ EOI }
+
+//time formatfrom HHMMSSZ 
+time = { ASCII_DIGIT{6} ~ "Z" }
+
+// station is 4 chars uppercase
+station = { SOI ~ ASCII_UPPER_ALPHA{4} ~ EOI }
+
+// expected wind format is DDDSS(GGG)?(KT|MPS), so:
+wind_dir= {ASCII_DIGIT{3}} // 3 digits
+wind_speed= { ASCII_DIGIT{2,3} } // 2 or 3 digits
+wind_gust = {"G"~ASCII_DIGIT{2,3} } // optional G+num
+wind_units= {"KT" | "MPS"}
+
+wind = {wind_dir~wind_speed ~ wind_gust?~wind_units}//? baceuse might be absent
+
+// visibility for abbreviations+nums
+visibility = {(ASCII_ALPHA)?~ // one upperc prefix char
+    //num + "" + num + "/" + num;  num + "/" + num; or num
+    ((ASCII_DIGIT+ ~ " " ~ ASCII_DIGIT+ ~ "/" ~ ASCII_DIGIT+) | (ASCII_DIGIT+ ~ "/" ~ ASCII_DIGIT+)
+    | (ASCII_DIGIT+)) ~ "SM" // num + somethin
+}
+
+cloud_cover = { "FEW" | "SCT" | "BKN" | "OVC" } //type of cloud
+cloud_alt = { ASCII_DIGIT{3} } //altitude 
+clouds = {cloud_cover~cloud_alt | "CLR" | "SKC"}//cloud type + altitude or clear
+
+
+temp = { "M"? ~ ASCII_DIGIT{2} } //temp (M if minus)
+dew = { "M"? ~ ASCII_DIGIT{2} } //dew point (M if minus)
+temp_dew = { temp ~ "/" ~ dew } // temp/dew point
+
+// pressure A + 4 dig
+pressure = { "A" ~ ASCII_DIGIT{4} }
+
+// all RMK+something until eol
+remarks = { "RMK" ~ (!NEWLINE ~ ANY)* }
+
+//known words from docunentation(just in case:) might delete if i find optimalsolution)
+known_keyword = {"COR" | "AUTO" | "AMD" | "TEMPO" | "NOSIG" }
+
+//other tokens >2 upper chars
+uppercase_token = @{ ASCII_UPPER_ALPHA{2,} }
+
+// sep
+separator = _{ WHITESPACE+ }
+
+// known tokens 
+token = _{station| time| wind|visibility|clouds|temp_dew| pressure|remarks| known_keyword| uppercase_token| separator| unknown_token}
+
+//until whitespace - any symbols >1 times 
+unknown_token = @{ (!WHITESPACE ~ ANY)+ }
+

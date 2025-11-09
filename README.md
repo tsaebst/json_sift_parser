@@ -135,27 +135,24 @@ make test
 
 The crate is split into two logical parts:
 
-- `src/lib.rs` — public API for JSON → flat map → CSV.
-- `src/metar.rs` — METAR grammar, token helpers, and decoding logic.
+- `src/lib.rs` —  JSON → flat map → CSV
+- `src/metar.rs` — METAR grammar, token helpers, and decoding logic
 
 ---
 
 ## `src/lib.rs`
 
-* `ParseError`
-Custom error type for JSON errors, structural issues, and (future) detector/pattern errors.
+* `parse_json()`
+Parses input string as JSON using `serde_json::from_str`
 
-* `parse_json(&str) -> Result<Value, ParseError>`
-Parses input string as JSON using `serde_json::from_str` and wraps failures into `ParseError::Json`.
+* `convert_to_csv()`
+gets JSON object or array. flattens each entry, collects all keys as CSV headers, and writes rows via `csv::Writer` using sorted columns
 
-* `convert_to_csv(&Value) -> Result<String, ParseError>`
-Accepts a JSON object or array, flattens each entry, collects all keys as CSV headers, and writes rows via `csv::Writer` using stable sorted columns.
+* `flatten()`
+Recursively walks though objects, arrays, scalars in json, builds indexed keys, and redirects string vals to `parse_scalar`
 
-* `flatten(&Value, String, &mut HashMap<String, String>)`
-Recursively walks nested JSON (objects, arrays, scalars), builds dotted/indexed keys, and delegates string values to `parse_scalar`.
-
-* `parse_scalar(String, &str, &mut HashMap<String, String>)`
-Normalizes a string, tries to decode it as METAR via `metar::decode_metar`, otherwise tokenizes and uses simple METAR-like patterns or falls back to `token_N` columns.
+* `parse_scalar()`
+Normalizes str, tries to decode it as METAR via `metar::decode_metar`. if not - tokenizes and uses simple metar patterns or creates `token_n` columns
 
 ---
 
@@ -164,54 +161,54 @@ Normalizes a string, tries to decode it as METAR via `metar::decode_metar`, othe
 * `SiftParser`
 Pest-generated parser using `grammar.pest` rules for METAR reports.
 
-* `decode_metar(&str) -> Option<HashMap<String, String>>`
-Parses a full METAR string with `SiftParser`, walks the parse tree, and returns a flat map of normalized METAR fields, or `None` if nothing meaningful is found.
+* `decode_metar()`
+Parses a full METAR string with `SiftParser`, walks through parse tree, and returns a flat map of normalized METAR fields/`None`
 
-* `visit_metar(pair, &mut HashMap<String, String>)`
-Traverses Pest parse pairs, matches rules (station, time, wind, etc.), and fills the output map by reusing `apply_pattern` where possible.
+* `visit_metar()`
+visits Pest parse pairs, matches basic rules, and fills the output map by using `apply_pattern` where possible 
 
-* `complex_key_value(&str) -> Vec<String>`
-Splits a free-form string into tokens by whitespace and basic separators, used before pattern detection.
+* `complex_key_value()`
+Splits a random string into tokens by whitespace and basic separators before pattern detection
 
-* `is_code_like_token(&str)` / `all_tokens_code_like(&[String])`
-Detects whether tokens look like uppercase/number codes to decide if pattern parsing is safe.
+* `is_code_like_token()` / `all_tokens_code_like()`
+Detects whether tokens look like uppercase/number codes to decide if there's a pattern
 
 * `SimplePattern`
-Enum describing recognized token types like `TempDew`, `Wind`, `Pressure`, `Time`, `Visibility`, `Cloud`, `FlightCategory`.
+Enum for recognized token types `TempDew`, `Wind`, `Pressure`, `Time`, `Visibility`, `Cloud`, `FlightCategory`.
 
-* `holds_pattern_value(&str) -> Option<SimplePattern>`
-Classifies a single token into one of the `SimplePattern` variants based on simple textual rules.
+* `holds_pattern_value()`
+Classifies a single token into one of the `SimplePattern` variants
 
-* `apply_pattern(&str, &str, SimplePattern, &mut HashMap<String, String>)`
-Expands a recognized pattern token into one or more well-named columns (e.g. `wind_*`, `temp_c`, `cloud_cover`, `flight_category`), respecting optional key prefix.
+* `apply_pattern()`
+Expands a recognized pattern token into one or more well-named columns 
 
-* `norm(&str) -> String`
-Normalizes raw text by trimming, cleaning trailing symbols, and collapsing whitespace for more robust matching.
+* `norm()`
+Normalizes raw text
 ---
 
 ## Error handling
 
-- All library-facing functions return `Result<_, ParseError>` so callers get a single, typed error surface.
-- JSON issues (invalid syntax, wrong encoding) become `ParseError::Json`.
-- Structural problems (unsupported top-level type, CSV write failures, unexpected shapes) become `ParseError::Structure`.
-- `Detector` / pattern-related variants are reserved for future, more detailed parsing diagnostics without changing the public API.
+- All library-facing functions return `Result<_, ParseError>` get a single, typed error surface.
+- JSON issues like invalid syntax, wrong encodin become `ParseError::Json`.
+- Structural problems likeCSV write failures, wierd shapes become `ParseError::Structure`.
+- `Detector` pattern-related variants are reserved for future, more detailed parsing diagnostics without changing the public API.
 
 
 ---
-> [!WARNING]
-> to be done
+## `main.rs` – CLI entrypoint
 
-## MAIN file
+The `main.rs` file defines the **command-line interface** and connects user commands with the core logic from `lib.rs`.
 
-The `main.rs` file defines the **CLI interface** and the high-level program flow.  
-Its main goal is to connect logic from `lib.rs` with  user commands.
+### What it does now
 
-Before executing any of the commands, the program uses functions from `lib.rs`  to perform all data handling.
-
-As a concept for now, but a plan for the future i might add: 
-- Loads a configuration file (`config.json`) if available.
-
-
+- Uses **clap** to expose two subcommands:
+  - `decode <file> [-o, --output <path>]`
+    - Reads a JSON file from disk
+    - Calls `parse_json()` from `lib.rs` to validate and load it
+    - Calls `convert_to_csv()` to flatten and transform the data into CSV.
+    - Prints the CSV to `stdout` or writes it to the specified `--output` file
+  - `credits`
+    - Prints project name, author, short technical description, and tech stack.
 
 ## How to run
 

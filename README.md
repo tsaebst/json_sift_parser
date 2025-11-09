@@ -142,50 +142,50 @@ The crate is split into two logical parts:
 
 ## `src/lib.rs`
 
-### `ParseError`
+* `ParseError`
 Custom error type for JSON errors, structural issues, and (future) detector/pattern errors.
 
-### `parse_json(&str) -> Result<Value, ParseError>`
+* `parse_json(&str) -> Result<Value, ParseError>`
 Parses input string as JSON using `serde_json::from_str` and wraps failures into `ParseError::Json`.
 
-### `convert_to_csv(&Value) -> Result<String, ParseError>`
+* `convert_to_csv(&Value) -> Result<String, ParseError>`
 Accepts a JSON object or array, flattens each entry, collects all keys as CSV headers, and writes rows via `csv::Writer` using stable sorted columns.
 
-### `flatten(&Value, String, &mut HashMap<String, String>)`
+* `flatten(&Value, String, &mut HashMap<String, String>)`
 Recursively walks nested JSON (objects, arrays, scalars), builds dotted/indexed keys, and delegates string values to `parse_scalar`.
 
-### `parse_scalar(String, &str, &mut HashMap<String, String>)`
+* `parse_scalar(String, &str, &mut HashMap<String, String>)`
 Normalizes a string, tries to decode it as METAR via `metar::decode_metar`, otherwise tokenizes and uses simple METAR-like patterns or falls back to `token_N` columns.
 
 ---
 
 ## `src/metar.rs`
 
-### `SiftParser`
+* `SiftParser`
 Pest-generated parser using `grammar.pest` rules for METAR reports.
 
-### `decode_metar(&str) -> Option<HashMap<String, String>>`
+* `decode_metar(&str) -> Option<HashMap<String, String>>`
 Parses a full METAR string with `SiftParser`, walks the parse tree, and returns a flat map of normalized METAR fields, or `None` if nothing meaningful is found.
 
-### `visit_metar(pair, &mut HashMap<String, String>)`
+* `visit_metar(pair, &mut HashMap<String, String>)`
 Traverses Pest parse pairs, matches rules (station, time, wind, etc.), and fills the output map by reusing `apply_pattern` where possible.
 
-### `complex_key_value(&str) -> Vec<String>`
+* `complex_key_value(&str) -> Vec<String>`
 Splits a free-form string into tokens by whitespace and basic separators, used before pattern detection.
 
-### `is_code_like_token(&str)` / `all_tokens_code_like(&[String])`
+* `is_code_like_token(&str)` / `all_tokens_code_like(&[String])`
 Detects whether tokens look like uppercase/number codes to decide if pattern parsing is safe.
 
-### `SimplePattern`
+* `SimplePattern`
 Enum describing recognized token types like `TempDew`, `Wind`, `Pressure`, `Time`, `Visibility`, `Cloud`, `FlightCategory`.
 
-### `holds_pattern_value(&str) -> Option<SimplePattern>`
+* `holds_pattern_value(&str) -> Option<SimplePattern>`
 Classifies a single token into one of the `SimplePattern` variants based on simple textual rules.
 
-### `apply_pattern(&str, &str, SimplePattern, &mut HashMap<String, String>)`
+* `apply_pattern(&str, &str, SimplePattern, &mut HashMap<String, String>)`
 Expands a recognized pattern token into one or more well-named columns (e.g. `wind_*`, `temp_c`, `cloud_cover`, `flight_category`), respecting optional key prefix.
 
-### `norm(&str) -> String`
+* `norm(&str) -> String`
 Normalizes raw text by trimming, cleaning trailing symbols, and collapsing whitespace for more robust matching.
 ---
 

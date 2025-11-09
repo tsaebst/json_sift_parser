@@ -74,8 +74,9 @@ json_sift_parser/
 ├── config.json             # parser patterns and rules config
 ├── src/
 │   ├── grammar.pest        # Metar grammar defining
-│   ├── lib.rs              # parsing and transformation logic (to be done !!!!)
-│   └── main.rs             # cli entry point (to be done !!!!)
+│   ├── lib.rs              # parsing and transformation logic
+|   |── metar.rs            
+│   └── main.rs             # cli entry point 
 ├── tests/
 │   └── parser_tests.rs     # unit-tests for grammar (to be aaded for parsing logic)
 ├── result.csv              # outout CSV
@@ -130,43 +131,70 @@ To run all unit tests:
 make test
 
 ---
-> [!WARNING]
-> to be done
-## Parsing logic in `lib.rs` 
+## Parsing architecture
 
-This part of program is built on next key ideas:
+The crate is split into two logical parts:
 
-1. Everything starts as JSON  
-2. Complex JSON trees are converted into flat key–value pairs for export.  
-3. Transformation — parsed data are transformed into csv
+- `src/lib.rs` — public API for JSON → flat map → CSV.
+- `src/metar.rs` — METAR grammar, token helpers, and decoding logic.
 
 ---
 
-### `parse_json()`
+## `src/lib.rs`
 
-- **Goal:** validate and load incoming API data.  
-- **If successful:** returns a `serde_json::Value` (can be `Object`, `Array`, etc.).  
-- **If failed:** returns a `ParseError::JsonError`.
+### `ParseError`
+Custom error type for JSON errors, structural issues, and (future) detector/pattern errors.
 
-### `print_structure()`
-Recursively prints the internal structure of a JSON value.  
-Used for inspeting input data and understanding its nesting.
+### `parse_json(&str) -> Result<Value, ParseError>`
+Parses input string as JSON using `serde_json::from_str` and wraps failures into `ParseError::Json`.
 
-### `flatten_json()`
-Flattens a nested JSON object into simple key–value pairs.  
-When it finds `"rawOb"` (a raw METAR string), it automatically decodes it using `parse_raw_ob`.
+### `convert_to_csv(&Value) -> Result<String, ParseError>`
+Accepts a JSON object or array, flattens each entry, collects all keys as CSV headers, and writes rows via `csv::Writer` using stable sorted columns.
 
-### `convert_to_csv()`
-Takes structured JSON and produces a CSV string.
+### `flatten(&Value, String, &mut HashMap<String, String>)`
+Recursively walks nested JSON (objects, arrays, scalars), builds dotted/indexed keys, and delegates string values to `parse_scalar`.
 
-### `parse_raw_ob()`
+### `parse_scalar(String, &str, &mut HashMap<String, String>)`
+Normalizes a string, tries to decode it as METAR via `metar::decode_metar`, otherwise tokenizes and uses simple METAR-like patterns or falls back to `token_N` columns.
 
-Parses a single METAR weather string using the grammar in grammar.pest. Recognizes patterns, dechipers them, so that we could separae detected values into different columns.
+---
 
-### ParseError
+## `src/metar.rs`
 
-* JsonError — invalid or malformed JSON
-* StructureError — grammar parsing or format mismatch
+### `SiftParser`
+Pest-generated parser using `grammar.pest` rules for METAR reports.
+
+### `decode_metar(&str) -> Option<HashMap<String, String>>`
+Parses a full METAR string with `SiftParser`, walks the parse tree, and returns a flat map of normalized METAR fields, or `None` if nothing meaningful is found.
+
+### `visit_metar(pair, &mut HashMap<String, String>)`
+Traverses Pest parse pairs, matches rules (station, time, wind, etc.), and fills the output map by reusing `apply_pattern` where possible.
+
+### `complex_key_value(&str) -> Vec<String>`
+Splits a free-form string into tokens by whitespace and basic separators, used before pattern detection.
+
+### `is_code_like_token(&str)` / `all_tokens_code_like(&[String])`
+Detects whether tokens look like uppercase/number codes to decide if pattern parsing is safe.
+
+### `SimplePattern`
+Enum describing recognized token types like `TempDew`, `Wind`, `Pressure`, `Time`, `Visibility`, `Cloud`, `FlightCategory`.
+
+### `holds_pattern_value(&str) -> Option<SimplePattern>`
+Classifies a single token into one of the `SimplePattern` variants based on simple textual rules.
+
+### `apply_pattern(&str, &str, SimplePattern, &mut HashMap<String, String>)`
+Expands a recognized pattern token into one or more well-named columns (e.g. `wind_*`, `temp_c`, `cloud_cover`, `flight_category`), respecting optional key prefix.
+
+### `norm(&str) -> String`
+Normalizes raw text by trimming, cleaning trailing symbols, and collapsing whitespace for more robust matching.
+---
+
+## Error handling
+
+- All library-facing functions return `Result<_, ParseError>` so callers get a single, typed error surface.
+- JSON issues (invalid syntax, wrong encoding) become `ParseError::Json`.
+- Structural problems (unsupported top-level type, CSV write failures, unexpected shapes) become `ParseError::Structure`.
+- `Detector` / pattern-related variants are reserved for future, more detailed parsing diagnostics without changing the public API.
 
 
 ---
@@ -197,6 +225,7 @@ cargo run
 
 - **Parse and save**
 ```
+cargo run -- decode test.json --output result.csv
 make decode FILE=test.json OUT=result.csv CONFIG=config.json
 ```
 

@@ -1,10 +1,8 @@
 use pest::Parser;
-use pest_derive::Parser;
-
-//defining the parser sctuct
-#[derive(Parser)]
-#[grammar = "grammar.pest"]
-pub struct SiftParser;
+//the parser
+// basic tokens
+use json_sift_parser::{Rule, SiftParser, convert_to_csv};
+use serde_json::json;
 
 //cehck if metar report is parsed
 #[test]
@@ -83,6 +81,7 @@ fn parse_wind_valid() {
         assert!(SiftParser::parse(Rule::wind, s).is_ok(), "Failed on {s}");
     }
 }
+
 #[test]
 fn parse_wind_invalid() {
     for s in ["180KT", "0505KT", "99999", "18005"] {
@@ -142,6 +141,7 @@ fn parse_temp_dew_valid() {
         );
     }
 }
+
 #[test]
 fn parse_temp_dew_invalid() {
     for s in ["15/", "/10", "15-10"] {
@@ -187,4 +187,87 @@ fn parse_full_metar_report() {
     let input = "UKBB 121200Z 18005KT 10SM FEW020 15/10 A2992 RMK TEST";
     let result = SiftParser::parse(Rule::metar_report, input);
     assert!(result.is_ok(), "Full METAR failed: {:?}", result.err());
+}
+
+// wind parts
+#[test]
+fn parse_wind_dir() {
+    assert!(SiftParser::parse(Rule::wind_dir, "180").is_ok());
+}
+
+#[test]
+fn parse_wind_units() {
+    for s in ["KT", "MPS"] {
+        assert!(
+            SiftParser::parse(Rule::wind_units, s).is_ok(),
+            "Failed on {s}"
+        );
+    }
+}
+
+// cloud parts
+#[test]
+fn parse_cloud_cover() {
+    for s in ["FEW", "SCT", "BKN", "OVC"] {
+        assert!(
+            SiftParser::parse(Rule::cloud_cover, s).is_ok(),
+            "Failed on {s}"
+        );
+    }
+}
+
+#[test]
+fn parse_cloud_alt() {
+    assert!(SiftParser::parse(Rule::cloud_alt, "020").is_ok());
+}
+
+// temp / dew
+#[test]
+fn parse_temp_dew_parts() {
+    for s in ["15", "00", "M02"] {
+        assert!(
+            SiftParser::parse(Rule::temp, s).is_ok(),
+            "temp failed on {s}"
+        );
+        assert!(SiftParser::parse(Rule::dew, s).is_ok(), "dew failed on {s}");
+    }
+}
+
+// separator (whitespace+)
+#[test]
+fn parse_separator() {
+    assert!(SiftParser::parse(Rule::separator, " ").is_ok());
+    assert!(SiftParser::parse(Rule::separator, "   ").is_ok());
+}
+
+// unknown token
+#[test]
+fn parse_unknown_token() {
+    for s in ["XXX", "///", "ABC123", "Q1Q1"] {
+        assert!(
+            SiftParser::parse(Rule::unknown_token, s).is_ok(),
+            "Failed on {s}"
+        );
+    }
+}
+
+// token as umbrella rule
+#[test]
+fn parse_token_mixed() {
+    for s in [
+        "UKBB", "121200Z", "18005KT", "FEW020", "A2992", "COR", "XXX",
+    ] {
+        assert!(
+            SiftParser::parse(Rule::token, s).is_ok(),
+            "token failed on {s}"
+        );
+    }
+}
+
+#[test]
+fn csv_quotes_special_chars() {
+    let data = json!([{ "text": "foo,bar", "desc": "multi\nline" }]);
+    let csv = convert_to_csv(&data).unwrap();
+    assert!(csv.contains("\"foo,bar\""));
+    assert!(csv.contains("\"multi\nline\""));
 }

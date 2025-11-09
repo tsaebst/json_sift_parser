@@ -11,6 +11,7 @@ time = { ASCII_DIGIT{6} ~ "Z" }
 
 // station is 4 chars uppercase
 station = { SOI ~ ASCII_UPPER_ALPHA{4} ~ EOI }
+// station = { ASCII_UPPER_ALPHA{4} }
 
 // expected wind format is DDDSS(GGG)?(KT|MPS), so:
 wind_dir= {ASCII_DIGIT{3}} // 3 digits

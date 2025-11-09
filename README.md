@@ -235,6 +235,23 @@ cargo run -- decode test.json --output result.csv
 make decode FILE=test.json OUT=result.csv CONFIG=config.json
 ```
 
+---
+## Examples of EDA with dataset my parser made:
+
+* Rose of wind grpah:
+
+![Rose of wind](rose_plot.png)
+
+* Correlation plot:
+
+![Correlation plot](corr_plot.png)
+
+* Parametres ratio pictured on the world map:
+
+![Map plot](map_plot.png)
+
+ --- 
+
 - **Credits**
 ```
 cargo run -- credits

@@ -50,10 +50,10 @@ Below is an example of how the raw aviation weather data looks **after being par
 > To download the project use commands:
 ```
 bash
-git clone https://github.com/tsaebst/json_sift_parser.git
+git clone https://github.com/tsaebst/json_sift_parser_upd
 cd json_sift_parser
 cargo build
-cargo run
+cargo install --path .
 
 ```
 
@@ -62,7 +62,8 @@ To start working, you need to install the project locally
 
 To begin, type:
 ```
-make help
+jsonsift --help
+
 ```
 
 # Project files:
@@ -223,8 +224,8 @@ cargo run
 
 - **Parse and save**
 ```
-cargo run -- decode test.json --output result.csv
-make decode FILE=test.json OUT=result.csv CONFIG=config.json
+jsonsift decode test.json --output result.csv
+
 ```
 
 ---

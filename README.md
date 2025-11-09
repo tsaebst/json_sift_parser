@@ -42,6 +42,15 @@ in case the incoming data have a slightly different structure.
 Below is an example of how the raw aviation weather data looks **after being parsed and converted** into structured CSV format :
 
 ![Example of transformed data](example_transformed_data.png)
+
+### And examples of EDA with dataset my parser made:
+
+![Rose of wind](rose_plot.png)
+
+![Correlation plot](corr_plot.png)
+
+![Map plot](map_plot.png)
+
  --- 
 ## Getting Started
 
